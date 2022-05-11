@@ -14,6 +14,7 @@ pipeline {
   stages {
     stage('Build Jar') {
       steps {
+        echo '------------------Building Jar file------------------'
         git 'https://github.com/nsaro/jenkins-docker-openshit.git'
         sh "mvn -Dmaven.test.failure.ignore=true clean package"
       }
@@ -21,13 +22,15 @@ pipeline {
     stage('Building image') {
       steps {
         script {
-          dockerImage = docker.build registry + ":$BUILD_NUMBER"
+            echo '------------------Building Image------------------'
+            dockerImage = docker.build registry + ":$BUILD_NUMBER"
         }
       }
     }
     stage('Deploy image') {
       steps {
         script {
+          echo '------------------Deploying Image------------------'
           docker.withRegistry('', registryCredential) {
             dockerImage.push()
           }
@@ -36,6 +39,7 @@ pipeline {
     }
     stage('Cleaning up') {
       steps {
+        echo '------------------Clearing Resources------------------'
         sh "docker rmi $registry:$BUILD_NUMBER"
       }
     }
