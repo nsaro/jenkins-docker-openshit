@@ -12,6 +12,16 @@ pipeline {
     dockerImage = ''
   }
   stages {
+    stage('artifact id') {
+      steps {
+        script {
+          String formattedDate = new Date().format('yyyy-MM-dd_HH_mm')
+          env.artifact_id = formattedDate + "_" + env.GIT_COMMIT[0. .6]
+          currentBuild.description = "${env.artifact_id}"
+          echo "Artifact Identifier: ${env.artifact_id}"
+        }
+      }
+    }
     stage('Build Jar') {
       steps {
         echo '------------------Building Jar file------------------'
@@ -22,8 +32,8 @@ pipeline {
     stage('Building image') {
       steps {
         script {
-            echo '------------------Building Image------------------'
-            dockerImage = docker.build registry + ":$BUILD_NUMBER"
+          echo '------------------Building Image------------------'
+          dockerImage = docker.build registry + ":${env.artifact_id}"
         }
       }
     }
@@ -43,5 +53,12 @@ pipeline {
         sh "docker rmi $registry:$BUILD_NUMBER"
       }
     }
+    stage('Test Openshift') {
+          steps {
+            echo '------------------Test Openshift------------------'
+            sh "oc get namespace"
+            echo "Artifact Identifier: ${env.artifact_id}"
+          }
+        }
   }
 }
