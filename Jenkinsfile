@@ -4,7 +4,7 @@ pipeline {
     maven "M3"
   }
   triggers {
-    pollSCM()
+    pollSCM ''
   }
   environment {
     registry = "nsaro/spring-hello-world-v1"
