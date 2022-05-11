@@ -33,7 +33,7 @@ pipeline {
       steps {
         script {
           echo '------------------Building Image------------------'
-          dockerImage = docker.build registry + ":$BUILD_NUMBER"
+          dockerImage = docker.build registry + "${env.artifact_id}"
         }
       }
     }
