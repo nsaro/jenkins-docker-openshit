@@ -16,7 +16,7 @@ pipeline {
       steps {
         script {
           String formattedDate = new Date().format('yyyy-MM-dd_HH_mm')
-          env.artifact_id = formattedDate + "_" + "${env.GIT_COMMIT}"
+          env.artifact_id = formattedDate + "_" + "$BUILD_NUMBER"
           currentBuild.description = "${env.artifact_id}"
           echo "Artifact Identifier: ${env.artifact_id}"
         }
