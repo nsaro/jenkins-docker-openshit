@@ -50,7 +50,7 @@ pipeline {
     stage('Cleaning up') {
       steps {
         echo '------------------Clearing Resources------------------'
-        sh "docker rmi $registry + :${env.artifact_id}"
+        sh "docker rmi $registry:${env.artifact_id}"
       }
     }
     stage('Test Openshift') {
