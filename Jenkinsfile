@@ -53,12 +53,19 @@ pipeline {
         sh "docker rmi $registry:${env.artifact_id}"
       }
     }
-    stage('Test Openshift') {
-          steps {
-            echo '------------------Test Openshift------------------'
-            sh "oc get namespace"
-            echo "Artifact Identifier: ${env.artifact_id}"
-          }
+    stage('update openshift') {
+        steps {
+            echo '------------------Updating openshift configs------------------'
+            sh "oc apply -f openShiftConfigs/service.yaml"
+            sh "oc apply -f openShiftConfigs/router.yaml"
+            sh "oc process -f openShiftConfigs/deployment-config.yaml -p DOCKER_TAG=${env.artifact_id} | oc apply -f -"
         }
+    }
+    stage('deploy') {
+        steps {
+            echo '------------------Deploying------------------'
+            sh "oc rollout latest dc/spring-hello-world"
+        }
+    }
   }
 }

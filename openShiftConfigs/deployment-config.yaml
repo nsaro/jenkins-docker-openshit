@@ -1,0 +1,32 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+parameters:
+  - name: DOCKER_TAG
+    required: true
+
+objects:
+  - kind: DeploymentConfig
+    apiVersion: v1
+    metadata:
+      name: spring-hello-world
+      labels:
+        app: app-spring-hello-world
+    spec:
+      template:
+        metadata:
+          labels:
+            name: spring-hello-world
+        spec:
+          containers:
+            - name: spring-hello-world
+              image: nsaro/spring-hello-world-v1:${DOCKER_TAG}
+              ports:
+                - containerPort: 8080
+                  protocol: TCP
+      replicas: 2
+      triggers: []
+      strategy:
+        type: Rolling
+      paused: false
+      revisionHistoryLimit: 2
+      minReadySeconds: 0
