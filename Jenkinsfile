@@ -57,7 +57,7 @@ pipeline {
         steps {
             echo '------------------Updating openshift configs------------------'
             sh "oc apply -f openShiftConfigs/service.yaml"
-            sh "oc apply -f openShiftConfigs/router.yaml"
+            sh "oc apply -f openShiftConfigs/route.yaml"
             sh "oc process -f openShiftConfigs/deployment-config.yaml -p DOCKER_TAG=${env.artifact_id} | oc apply -f -"
         }
     }
